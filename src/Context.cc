@@ -152,6 +152,12 @@ extern error_code::Value option_processing(Option& option, bool standalone,
 Context::Context(bool standalone,
                  int argc, char** argv, const KeyVals& options)
 {
+  FILE * lock_file = fopen("aria2.pid", "w+");
+  if (lock_file != NULL) {
+    fprintf(lock_file, "%ld\n", (long) getpid());
+    fclose(lock_file);
+  }
+
   std::vector<std::string> args;
   auto op = std::make_shared<Option>();
   error_code::Value rv;
